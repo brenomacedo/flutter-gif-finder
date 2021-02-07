@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:share/share.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -114,6 +116,9 @@ class _HomeState extends State<Home> {
                   return GifPage(snapshot.data["data"][index]);
                 }
               ));
+            },
+            onLongPress: () {
+              Share.share(snapshot.data["data"][index]["images"]["fixed_height"]["url"]);
             },
           );
         else
