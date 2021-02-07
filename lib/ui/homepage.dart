@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:share/share.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _HomeState extends State<Home> {
   Future<Map> _getGifs() async {
     http.Response response;
 
-    if(_search == null)
+    if(_search == null || _search.isEmpty)
       response = await http.get('https://api.giphy.com/v1/gifs/trending?api_key=SJ2m3lJnT1oBVCGCVtz2ypqnBC0C1PL5&limit=20&rating=g');
     else
       response = await http.get('https://api.giphy.com/v1/gifs/search?api_key=SJ2m3lJnT1oBVCGCVtz2ypqnBC0C1PL5&q=$_search&limit=19&offset=$_offset&rating=g&lang=en');
@@ -105,11 +106,14 @@ class _HomeState extends State<Home> {
       itemCount: _getCount(snapshot.data["data"]),
       itemBuilder: (context, index) {
 
-        if(_search == null || index < snapshot.data["data"].length)
+        if(_search == null || _search.isEmpty || index < snapshot.data["data"].length)
           return GestureDetector(
-            child: Image.network(snapshot.data["data"][index]["images"]["fixed_height"]["url"],
-            fit: BoxFit.cover,
-            height: 300.0),
+            child: FadeInImage.memoryNetwork(
+              image: snapshot.data["data"][index]["images"]["fixed_height"]["url"],
+              height: 300.0,
+              fit: BoxFit.cover,
+              placeholder: kTransparentImage,
+            ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
@@ -143,7 +147,7 @@ class _HomeState extends State<Home> {
   }
 
   int _getCount(List data) {
-    if(_search == null) return data.length;
+    if(_search == null || _search.isEmpty) return data.length;
     return data.length + 1;
   }
 
