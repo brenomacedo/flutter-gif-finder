@@ -56,9 +56,36 @@ class _HomeState extends State<Home> {
               textAlign: TextAlign.center,
             ),
             padding: EdgeInsets.all(10.0),
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: _getGifs(),
+              builder: (context, snapshot) {
+                switch(snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.none:
+                    return Container(
+                      width: 200.0,
+                      height: 200.0,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        strokeWidth: 5.0,
+                      )
+                    );
+                  default:
+                    if(snapshot.error) return Container();
+                    return _createGifTable(context, snapshot);
+                }
+              }
+            )
           )
         ],
       ),
     );
   }
+}
+
+Widget _createGifTable(BuildContext context, AsyncSnapshot snapshot) {
+  return Container();
 }
