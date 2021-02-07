@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gif_finder/ui/gifpage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
@@ -107,6 +108,13 @@ class _HomeState extends State<Home> {
             child: Image.network(snapshot.data["data"][index]["images"]["fixed_height"]["url"],
             fit: BoxFit.cover,
             height: 300.0),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return GifPage(snapshot.data["data"][index]);
+                }
+              ));
+            },
           );
         else
           return Container(
